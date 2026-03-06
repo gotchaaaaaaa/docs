@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Gotcha - Documentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <style>
+    :root {
+      --theme-color: #6600ff;
+      --sidebar-nav-link-color--active: #6600ff;
+      --sidebar-nav-link-border-color--active: #6600ff;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      name: 'Gotcha - Docs',
+      loadSidebar: true,
+      subMaxLevel: 2,
+      search: {
+        placeholder: 'Rechercher...',
+        noData: 'Aucun resultat',
+        depth: 3
+      },
+      auto2top: true
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+</body>
+</html>

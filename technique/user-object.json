@@ -1,0 +1,97 @@
+{
+    "id": "8d6fe5dd-ecd5-43f5-9f84-478f17980334",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "nicolasage38@orange.fr",
+    "email_confirmed_at": "2025-10-30T18:51:43.489436Z",
+    "phone": "",
+    "confirmed_at": "2025-10-30T18:51:43.489436Z",
+    "last_sign_in_at": "2025-11-09T11:05:38.414537Z",
+    "app_metadata": {
+        "provider": "email",
+        "providers": [
+            "email"
+        ]
+    },
+    "user_metadata": {
+        "email": "nicolasage38@orange.fr",
+        "email_verified": true,
+        "first_name": "dfaz",
+        "last_name": "dfaz",
+        "phone_verified": false,
+        "role": "provider",
+        "sub": "8d6fe5dd-ecd5-43f5-9f84-478f17980334"
+    },
+    "identities": [
+        {
+            "identity_id": "dac7dcd4-3ede-44a1-bfa5-db0c4c967f39",
+            "id": "8d6fe5dd-ecd5-43f5-9f84-478f17980334",
+            "user_id": "8d6fe5dd-ecd5-43f5-9f84-478f17980334",
+            "identity_data": {
+                "email": "nicolasage38@orange.fr",
+                "email_verified": false,
+                "first_name": "dfaz",
+                "last_name": "dfaz",
+                "phone_verified": false,
+                "role": "provider",
+                "sub": "8d6fe5dd-ecd5-43f5-9f84-478f17980334"
+            },
+            "provider": "email",
+            "last_sign_in_at": "2025-10-30T18:51:43.47846Z",
+            "created_at": "2025-10-30T18:51:43.478514Z",
+            "updated_at": "2025-10-30T18:51:43.478514Z",
+            "email": "nicolasage38@orange.fr"
+        }
+    ],
+    "created_at": "2025-10-30T18:51:43.45232Z",
+    "updated_at": "2025-11-09T11:05:38.476286Z",
+    "is_anonymous": false,
+    "profile": {
+        "id": "8d6fe5dd-ecd5-43f5-9f84-478f17980334",
+        "role": "provider",
+        "email": null,
+        "first_name": "dfaz",
+        "last_name": "dfaz",
+        "gender": null,
+        "birth_date": null,
+        "nationality": null,
+        "phone": null,
+        "address": null,
+        "rib": null,
+        "visible_on_map": false,
+        "available": false,
+        "created_at": "2025-10-30T18:51:45.13862",
+        "stripe_id": null,
+        "photo": null,
+        "birthdate": null,
+        "vehicule": null,
+        "done_onboarding": false
+    },
+    "provider": {
+        "created_at": "2025-10-30T18:51:45.204545+00:00",
+        "more": null,
+        "siret": null,
+        "avis_situ_siren": null,
+        "attestation_vigilance": null,
+        "adresse_facturation": null,
+        "regime_tva": null,
+        "assurance_pro": null,
+        "iban": null,
+        "bic": null,
+        "titulaire_compte_banc": null,
+        "zone_intervention_cp": null,
+        "zone_intervention_rayon": null,
+        "doc_identite": null,
+        "id": "14139d54-7ca4-4ca1-a7d9-4e2bf9984c7d",
+        "diplomes": null,
+        "profile": "8d6fe5dd-ecd5-43f5-9f84-478f17980334",
+        "situation": null,
+        "benevolat": null,
+        "accept_cgu": null,
+        "accept_geoloc": null,
+        "accept_notifications": null,
+        "accept_newsletter": null,
+        "done_onboarding": false,
+        "jobs": []
+    }
+}
