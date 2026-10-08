@@ -1,0 +1,40 @@
+stateDiagram-v2
+    [*] --> postule: Prestataire candidature spontanee (origin=applied)
+    [*] --> demarche: Entreprise demarche un prestataire (payante)
+
+    demarche --> postule: Prestataire soumet son devis
+    demarche --> rejected: Prestataire decline (pas de sanction)
+    demarche --> expired: Timeout sans reponse
+
+    postule --> assigned: Entreprise signe devis + preauth Stripe (payee)
+    postule --> accepted: Entreprise retient (benevole, multi-accept)
+    postule --> rejected: Entreprise refuse OU autre devis signe
+
+    accepted --> confirmed: Prestataire confirme dispo (benevole, premier arrive)
+    accepted --> rejected: Decline / autre presta confirme
+
+    confirmed --> employer_signed: Entreprise signe convention (benevole)
+    confirmed --> rejected: Entreprise annule
+
+    employer_signed --> assigned: Prestataire signe convention (benevole)
+    employer_signed --> rejected: Prestataire refuse
+    employer_signed --> expired: Timeout signature - avis negatif auto
+
+    assigned --> completed: Rapport valide + paiement capture
+    assigned --> canceled: Annulation (regle 24h minimum)
+
+    completed --> [*]
+    rejected --> [*]
+    canceled --> [*]
+    expired --> [*]
+
+    note right of assigned
+        Payee: PaymentIntent initial en escrow (requires_capture)
+        Benevole: 2 signatures OTP (entreprise puis prestataire)
+    end note
+
+    note right of canceled
+        cancel_mission v2 document-aware:
+        snapshot contrat + devis + payment_flow
+        refund automatique si paiement capture
+    end note
