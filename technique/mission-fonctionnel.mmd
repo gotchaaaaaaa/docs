@@ -1,0 +1,177 @@
+flowchart TD
+    subgraph CREATION["CREATION MISSION - Entreprise"]
+        A1[Entreprise remplit le formulaire multi-etapes]
+        A2{CGV signees ?}
+        A3[Modal signature CGV]
+        A4[Mission creee - status: open]
+        A5[Notifications push aux prestataires matches]
+
+        A1 --> A2
+        A2 -- Non --> A3 --> A4
+        A2 -- Oui --> A4
+        A4 --> A5
+    end
+
+    subgraph CANDIDATURE["CANDIDATURE - Prestataire"]
+        B1[Prestataire voit la mission]
+        B2{Mission benevole ?}
+
+        B3[PostulerDrawer - Payee]
+        B3a[Confirmer dispo]
+        B3b[Confirmer mobilite]
+        B3c[Accepter CGV prestataire]
+        B3d[Confirmer tarif horaire]
+        B3e[Candidature envoyee]
+
+        B4[PostulerDrawer - Benevole]
+        B4a[Confirmer dispo]
+        B4b[Confirmer mobilite]
+        B4c[Candidature envoyee]
+
+        B1 --> B2
+        B2 -- Payee --> B3 --> B3a --> B3b --> B3c --> B3d --> B3e
+        B2 -- Benevole --> B4 --> B4a --> B4b --> B4c
+    end
+
+    subgraph DEMARCHAGE["DEMARCHAGE - Entreprise"]
+        D1[Entreprise recherche prestataire]
+        D2[Envoi proposition directe]
+        D3["profile_mission creee - state: demarche"]
+        D1 --> D2 --> D3
+    end
+
+    subgraph REVIEW["REVUE CANDIDATURES - Entreprise"]
+        C1[Voir les profils candidats]
+        C2{Decision}
+        C3["Rejeter - state: rejected"]
+        C4{Mission payee ?}
+
+        C1 --> C2
+        C2 -- Refuser --> C3
+        C2 -- Accepter --> C4
+    end
+
+    subgraph DEVIS["PARCOURS DEVIS - Mission Payee"]
+        E1[Entreprise consulte le devis]
+        E2["Recap : TJM + jours (half-day) + temps prep + frais additionnels"]
+        E3[Verification moyen de paiement Stripe]
+        E4[Signature OTP entreprise + acceptation CGV prestataire]
+        E5["Pre-autorisation Stripe (escrow) - PaymentIntent requires_capture"]
+        E6["Application fee = commission 13% HT + TVA + frais Stripe HT+TVA"]
+        E7["state: assigned / Autres candidats: rejected"]
+
+        E1 --> E2 --> E3 --> E4 --> E5 --> E6 --> E7
+    end
+
+    subgraph CONTRAT_BENEVOLE["PARCOURS CONVENTION - Benevole"]
+        F1[Prestataire consulte la convention]
+        F2[Signature OTP prestataire]
+        F3["state: employer_signed"]
+        F4{Multi-participants ?}
+        F5[Entreprise selectionne le participant]
+        F6[Entreprise consulte la convention]
+        F7[Signature OTP entreprise]
+        F8["state: assigned"]
+
+        F1 --> F2 --> F3 --> F4
+        F4 -- Oui --> F5 --> F6
+        F4 -- Non --> F6
+        F6 --> F7 --> F8
+    end
+
+    subgraph EXECUTION["EXECUTION MISSION"]
+        G1["Mission en cours - contract_signed_ongoing"]
+        G2[Fin de la mission]
+    end
+
+    subgraph RAPPORT["RAPPORT POST-MISSION"]
+        H1[Popup rapport prestataire]
+        H2[Saisie heures travaillees + heures sup]
+        H3[Rapport soumis]
+        H4{Entreprise valide ?}
+        H5[Rapport approuve]
+        H6["Litige ouvert - dispute"]
+    end
+
+    subgraph PAIEMENT_FINAL["PAIEMENT FINAL - Payee uniquement"]
+        I1{Acompte ou paiement total ?}
+        I2[Calcul solde restant + commission sup]
+        I3[Stripe capture solde]
+        I4[Paiement complet]
+        I5[Deja paye en totalite]
+
+        I1 -- Acompte 30% --> I2 --> I3 --> I4
+        I1 -- 100% deja paye --> I5
+    end
+
+    subgraph NOTE["NOTATION"]
+        J1{Mission payee ?}
+        J2[Entreprise note le prestataire]
+        J3["4 criteres : ponctualite, brief, competences, communication"]
+        J4[Commentaire optionnel]
+        J5[Prestataire note entreprise]
+        J6[Note 1-5 etoiles + commentaire]
+        J7["Mission terminee"]
+
+        J1 -- Payee --> J2 --> J3 --> J4 --> J7
+        J1 -- Benevole --> J5 --> J6 --> J7
+    end
+
+    subgraph ANNULATION["CAS D ANNULATION"]
+        K1{Qui annule ?}
+        K2{Contrat signe ?}
+        K3[Mission annulee sans frais]
+        K4[Prestataire paye malgre annulation]
+        K5[Retrait prestataire]
+        K6[Avertissement suspension]
+
+        K1 -- Entreprise --> K2
+        K2 -- Non --> K3
+        K2 -- Oui --> K4
+        K1 -- Prestataire --> K5 --> K6
+    end
+
+    subgraph LITIGE["GESTION LITIGES"]
+        L1[Signalement probleme]
+        L2[Paiement bloque en escrow]
+        L3{Resolution sous 30j ?}
+        L4[Resolution manuelle]
+        L5[Liberation auto du paiement]
+
+        L1 --> L2 --> L3
+        L3 -- Oui --> L4
+        L3 -- Non --> L5
+    end
+
+    A5 --> B1
+    A5 --> D1
+    B3e --> C1
+    B4c --> C1
+    D3 --> C1
+    C4 -- Payee --> E1
+    C4 -- Benevole --> F1
+    E9 --> G1
+    F8 --> G1
+    G1 --> G2
+    G2 --> H1
+    H1 --> H2 --> H3 --> H4
+    H4 -- Approuve --> H5
+    H4 -- Conteste --> H6
+    H6 --> L1
+    H5 --> I1
+    I4 --> J1
+    I5 --> J1
+    H5 -. Benevole .-> J1
+
+    style CREATION fill:#e3f2fd
+    style CANDIDATURE fill:#f3e5f5
+    style DEMARCHAGE fill:#fff3e0
+    style REVIEW fill:#e8f5e9
+    style DEVIS fill:#fff9c4
+    style CONTRAT_BENEVOLE fill:#fce4ec
+    style EXECUTION fill:#e0f7fa
+    style RAPPORT fill:#f1f8e9
+    style PAIEMENT_FINAL fill:#fff9c4
+    style NOTE fill:#ede7f6
+    style ANNULATION fill:#ffebee
+    style LITIGE fill:#fbe9e7
