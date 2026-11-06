@@ -1,0 +1,134 @@
+flowchart TD
+    subgraph CLIENT_CREATION["Frontend - Creation Mission"]
+        CA1["pages/entreprise/create-mission.vue"]
+        CA2["CompanyCgvSignatureFlow.vue"]
+        CA3["Supabase RPC: create_mission_v2"]
+    end
+
+    subgraph CLIENT_CANDIDATURE["Frontend - Candidature"]
+        CB1["pages/prestataire/mission/id.vue"]
+        CB2["PostulerDrawer.vue - 5 etapes"]
+        CB3["Supabase INSERT: missions.profile_missions"]
+    end
+
+    subgraph CLIENT_DEVIS["Frontend - Devis Payee"]
+        CD1["pages/entreprise/devis/pmId.vue"]
+        CD2["ContractRecap + DevisSignature"]
+        CD3["POST /api/contract/company/verify-otp"]
+    end
+
+    subgraph CLIENT_CONTRAT["Frontend - Convention Benevole"]
+        CE1["pages/prestataire/contrat/id.vue"]
+        CE2["pages/entreprise/contrat/id.vue"]
+        CE3["POST /api/contract/provider/verify-otp"]
+        CE4["POST /api/contract/company/verify-otp"]
+    end
+
+    subgraph CLIENT_RAPPORT["Frontend - Rapport"]
+        CF1["MissionFinishedPopup.vue"]
+        CF2["POST /api/missions/provider-submit-report"]
+        CF3["POST /api/missions/validate-report"]
+    end
+
+    subgraph CLIENT_PAIEMENT["Frontend - Paiement Final"]
+        CG1["SlideButton - company-direct-pay"]
+        CG2["POST /api/missions/company-direct-pay"]
+    end
+
+    subgraph CLIENT_NOTE["Frontend - Notation"]
+        CH1["RatingProviderDrawer.vue"]
+        CH2["RatingCompanyDrawer.vue"]
+        CH3["RPC: submit_provider_rating"]
+        CH4["RPC: submit_company_rating"]
+    end
+
+    subgraph SERVER_API["Server API - Nitro"]
+        SA1["server/api/contract/company/verify-otp.js"]
+        SA2["server/api/contract/provider/verify-otp.js"]
+        SA3["server/api/stripe/create-payment-intent.js"]
+        SA4["server/api/stripe/webhook.js"]
+        SA5["server/api/missions/company-direct-pay.js"]
+        SA6["server/api/missions/provider-submit-report.js"]
+        SA7["server/api/missions/validate-report.js"]
+        SA8["server/api/push/send.js"]
+    end
+
+    subgraph STRIPE["Stripe Connect"]
+        ST1["paymentIntent.create"]
+        ST2["application_fee_amount - commission"]
+        ST3["transfer_data.destination - prestataire"]
+        ST4["Webhook: payment_intent.succeeded"]
+    end
+
+    subgraph DATABASE["Supabase / PostgreSQL"]
+        DB1["missions.missions - status: open/assigned/completed/canceled"]
+        DB2["missions.profile_missions - state: postule/accepted/assigned/completed"]
+        DB3["missions.contrats - provider_signed_at, company_signed_at"]
+        DB4["missions.devis - company_signed_at, amount_ht"]
+        DB5["missions.payment_flows - initial_status, final_status"]
+        DB6["missions.payment_events - audit trail"]
+        DB7["missions.disputes - status, auto_release_at"]
+        DB8["public.ratings - provider_rating, company_rating"]
+    end
+
+    subgraph REALTIME["Supabase Realtime"]
+        RT1["Broadcast: provider_signed"]
+        RT2["Broadcast: mission_canceled"]
+        RT3["Broadcast: report_submitted"]
+    end
+
+    CA1 --> CA2 --> CA3
+    CA3 --> DB1
+    CA3 --> SA8
+
+    CB1 --> CB2 --> CB3
+    CB3 --> DB2
+
+    CD1 --> CD2 --> CD3
+    CD3 --> SA1
+    SA1 -->|"OTP OK"| SA3
+    SA3 --> ST1
+    ST1 --> ST2
+    ST1 --> ST3
+    SA1 -->|"Update"| DB2
+    SA1 -->|"Update"| DB4
+    SA1 -->|"Create"| DB5
+
+    CE1 --> CE3 --> SA2
+    SA2 -->|"Update"| DB3
+    SA2 -->|"Update"| DB2
+    SA2 --> RT1
+    CE2 --> CE4 --> SA1
+    SA1 -->|"Update"| DB3
+
+    CF1 --> CF2 --> SA6
+    SA6 -->|"Update"| DB2
+    SA6 --> RT3
+    CF3 --> SA7
+    SA7 -->|"Update"| DB2
+
+    CG1 --> CG2 --> SA5
+    SA5 --> ST1
+    SA5 -->|"Update"| DB5
+    SA5 -->|"Insert"| DB6
+
+    ST4 --> SA4
+    SA4 -->|"Update"| DB5
+    SA4 -->|"Insert"| DB6
+
+    CH1 --> CH3 --> DB8
+    CH2 --> CH4 --> DB8
+
+    SA7 -.->|"Contestation"| DB7
+
+    style CLIENT_CREATION fill:#e3f2fd
+    style CLIENT_CANDIDATURE fill:#f3e5f5
+    style CLIENT_DEVIS fill:#fff9c4
+    style CLIENT_CONTRAT fill:#fce4ec
+    style CLIENT_RAPPORT fill:#f1f8e9
+    style CLIENT_PAIEMENT fill:#fff9c4
+    style CLIENT_NOTE fill:#ede7f6
+    style SERVER_API fill:#e8eaf6
+    style STRIPE fill:#e8f5e9
+    style DATABASE fill:#fff3e0
+    style REALTIME fill:#e0f7fa

@@ -1,0 +1,41 @@
+Hello App Review Team,
+
+Thank you for your message regarding Guideline 2.1.
+
+1. Screen recording
+Recording: [VIDEO LINK OR ATTACHED FILE]
+Device/iOS: [IPHONE MODEL / LATEST PUBLIC IOS VERSION]
+App version/build: [VERSION / BUILD]
+The recording launches the submitted build on a physical iPhone and shows the main flows, registration, login, deletion and content safety mechanisms.
+
+2. Purpose and audience
+Gotchaaaa connects event organizers, businesses and associations with event service providers, including for urgent needs. Organizers publish missions, search profiles and availability, review proposals and manage bookings. Providers manage profiles and availability, find missions and submit proposals. Both roles exchange messages. The marketplace helps users find suitable event professionals quickly and coordinate their services.
+
+3. Access, testing and scheduled environment change
+The submitted build uses an isolated test environment before November 2, 2026 at 00:00 Europe/Paris (November 1 at 23:00 UTC). Test accounts, missions and documents are separate from production. Stripe uses test mode in that environment; no real payments are processed.
+
+From that time, the next full app launch selects production, with live Stripe payments. A running app keeps its environment until fully closed and relaunched. Selection uses the device clock. Functionality is identical in both environments; only backend/data and payment mode change. Test records and sessions are not migrated; users sign in to production after the switch.
+
+Organizer demo login, before cutoff: [EMAIL / PASSWORD]
+Provider demo login, before cutoff: [EMAIL / PASSWORD]
+Organizer demo login, after cutoff: [EMAIL / PASSWORD]
+Provider demo login, after cutoff: [EMAIL / PASSWORD]
+Login/signature verification codes: [ACCESS INSTRUCTIONS]
+
+Both environments have demo accounts and missions. Search around Paris, France. Organizer: view a provider, create a mission, open its proposals and conversation. Provider: open [DEMO MISSION TITLE], submit a proposal and open the conversation. Inspect quotes and payment from the conversation. Prepared confirmed/completed bookings: [TITLES].
+
+In test mode only, use card 4242 4242 4242 4242, a future expiry and any three-digit CVC. Production payments are real. [IDENTIFY ANY ACTION THAT CREATES A REAL AUTHORIZATION OR CHARGE].
+
+Register using "S'inscrire" and select a role. Required sample files: [FILES/ACCESS, OR NONE]. Initiate deletion via "Compte" > "Reglages" > "Supprimer mon compte", using a separate account without outstanding obligations. Report a recommendation through its menu > "Signaler". User blocking: [EXACT STEPS IN THIS BUILD].
+
+4. External services/tools
+Supabase: authentication, database, storage, realtime and authentication emails. Nodemailer/Hostinger SMTP: transactional emails and verification codes. Stripe, Connect and Identity: payments, payouts and identity verification. Mapbox: maps. French government Address API: address lookup. INSEE/Sirene and Business Search API: business information. Google/LinkedIn: optional sign-in. Google Calendar: optional availability sync. Hostinger: backend hosting. No AI service delivers core functionality.
+
+5. Regions
+Available in all App Store countries/regions. Operations are primarily in France; missions cover [CURRENT OPEN SERVICE AREAS]. Store availability does not imply worldwide mission coverage. French interface, euro payments; some onboarding uses French registration details.
+
+6. Documentation
+Not applicable to the core event-services marketplace. [ATTACH ANY APPLICABLE REGULATORY OR THIRD-PARTY CONTENT AUTHORIZATIONS].
+
+Best regards,
+The Gotchaaaa Team
